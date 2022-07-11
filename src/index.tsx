@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client';
 import * as esbuild from 'esbuild-wasm';
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 
 
 
@@ -35,11 +36,19 @@ export const App = () => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     try {
-      const responseData = await esbuild.transform(inputValue, {
-        loader: 'jsx',
-        target: 'es2015',
-      });
-      setCode(responseData.code);
+      // const responseData = await esbuild.transform(inputValue, {
+      //   loader: 'jsx',
+      //   target: 'es2015',
+      // });
+      const result = await esbuild.build({
+       
+        entryPoints: ['index.js'],
+        bundle: true,
+        write: false,
+        plugins: [unpkgPathPlugin()]
+      })
+      
+      setCode(result.outputFiles[0].text);
     } catch (err) {
       console.log(err);
     }

@@ -1,8 +1,7 @@
-import  {createRoot}  from "react-dom/client"
-import * as esbuild from 'esbuild-wasm'
+import { createRoot } from 'react-dom/client';
+import * as esbuild from 'esbuild-wasm';
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
-
 
 
 
@@ -10,67 +9,62 @@ export const App = () => {
   const [inputValue, setInpuValue] = useState('');
   const [code, setCode] = useState('');
 
-  const startService = async() => {
-    
-    try{
-      const service = await esbuild.initialize({
-        worker:true,
-        wasmURL: '/esbuild.wasm'
-      })
-    }catch(err){
-      console.log(err)
+
+
+
+  const startService = async () => {
+    try {
+      await esbuild.initialize({
+        worker: true,
+        wasmURL: '/esbuild.wasm',
+      });
+    } catch (err) {
+      console.log(err);
     }
-      
-
-  }
-
+  };
+  
   useEffect(() => {
-
-    startService()
-  },[])
-  
-  
+    startService();
+  }, []);
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setInpuValue(e.currentTarget.value)
+    setInpuValue(e.currentTarget.value);
   };
 
-  const onClick = async(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    try{
+  const onClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    try {
       const responseData = await esbuild.transform(inputValue, {
         loader: 'jsx',
-        target: 'es2015'
-      })
-      console.log(responseData.code);
-    }catch(err){
-      console.log(err); 
+        target: 'es2015',
+      });
+      setCode(responseData.code);
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
   return (
     <div>
       <textarea value={inputValue} onChange={onChange}></textarea>
       <div>
         <button onClick={onClick}>제출</button>
       </div>
-      
-      
-      <div>
-        <h1>show</h1>
-        {/* 코드를 보여주기 위한 html tag */}
+
+      <div style={{ width: '360px' }}>
+        <h1>Transfiling to ES2015</h1>
         <pre>{code}</pre>
       </div>
     </div>
   );
 };
 
-let container:any;
+let container: any;
 
-document.addEventListener('DOMContentLoaded', function(event) {
+document.addEventListener('DOMContentLoaded', function (event) {
   if (!container) {
     container = document.getElementById('root') as HTMLElement;
-    const root = createRoot(container)
-    root.render(
-        <App/>
-    );
+    const root = createRoot(container);
+    root.render(<App />);
   }
 });

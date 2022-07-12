@@ -47,8 +47,7 @@ export const unpkgPathPlugin = () => {
           };
         }
 
-        // 가져오려는 unpkg에 대해 fetch가 이미 이루어졌는지 확인한다
-        // 이미 fetched 상태라면 바로 return하고, 아니라면 request로 넘긴다.
+
         const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(args.path);
         if (cachedResult) {
           return cachedResult;
@@ -60,7 +59,7 @@ export const unpkgPathPlugin = () => {
           contents: data,
           resolveDir: new URL('./', request.responseURL).pathname,
         };
-        // indexedDB
+
         await fileCache.setItem(args.path, result)
 
         return result;

@@ -3,10 +3,12 @@ import * as esbuild from 'esbuild-wasm';
 
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
+import { fetchPlugin } from './plugins/fetch-plugin';
 
 
 
 export const App = () => {
+  
   const [inputValue, setInpuValue] = useState('');
   const [code, setCode] = useState('');
 
@@ -38,11 +40,13 @@ export const App = () => {
       //   target: 'es2015',
       // });
       const result = await esbuild.build({
-       
+        // 번들 진입점
         entryPoints: ['index.js'],
         bundle: true,
         write: false,
-        plugins: [unpkgPathPlugin()],
+        // plugins - onLoad - contents에 들어가야 할 inputValue
+        plugins: [unpkgPathPlugin(),fetchPlugin(inputValue)],
+
         define: {
           'process.env.NODE_ENV': "production",
           global: "window"

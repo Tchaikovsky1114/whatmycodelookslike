@@ -10,9 +10,6 @@ export const App = () => {
   const [inputValue, setInpuValue] = useState('');
   const [code, setCode] = useState('');
 
-
-
-
   const startService = async () => {
     try {
       await esbuild.initialize({

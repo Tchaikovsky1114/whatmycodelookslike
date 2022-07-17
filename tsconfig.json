@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "index.tsx"  ]
+, "index.tsx", "Preview.tsx", "types.d.ts"  ]
 }

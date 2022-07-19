@@ -7,13 +7,13 @@ import parser from 'prettier/parser-babel';
 import { useRef } from 'react';
 
 interface CodeEditorProps {
-  initialValue: string;
   onChange(value: string): void;
+  content:string;
 }
 
 
 
-const CodeEditor = ({ onChange, initialValue }: CodeEditorProps) => {
+const CodeEditor = ({ onChange,content }: CodeEditorProps) => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
 
   const onEditorDidMount = async (editor: monaco.editor.IStandaloneCodeEditor,_monaco: Monaco) => {
@@ -50,10 +50,8 @@ const CodeEditor = ({ onChange, initialValue }: CodeEditorProps) => {
         코드정리
       </button>
       <MonacoEditor
-        
         onMount={onEditorDidMount}
-        defaultValue="const a = 1;"
-        value={initialValue}
+        value={content}
         defaultLanguage="javascript"
         height="100%"
         theme="vs-dark"

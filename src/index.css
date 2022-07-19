@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer base {
+  body{
+    @apply bg-modern-blue text-white;
+  }
+  li{
+    @apply list-disc;
+  }
+}
+
+.w-md-editor-bar svg{
+  display:none;
+}
+
+.w-md-editor-bar {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  height: 11px;
+  cursor: row-resize;
+  background-color: #37414a;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  width: 100%;
+  position:relative;
+}
+
+.wmde-markdown ul {
+  padding-left: 2rem;
+  line-height: 0.8;
+}
+
+.wmde-markdown ul li{
+  margin:0;
+  list-style-type: disc;
+}
+
+.wmde-markdown p, .wmde-markdown blockquote, .wmde-markdown ul, .wmde-markdown ol, .wmde-markdown dl, .wmde-markdown table, .wmde-markdown pre, .wmde-markdown details {
+  margin-bottom: 4px;
+}

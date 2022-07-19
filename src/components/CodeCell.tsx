@@ -1,46 +1,62 @@
-
-import React, { useState } from 'react';
-
-import codeProcessor from '../bundler'
+import React, { useEffect, useState } from 'react';
+import codeProcessor from '../bundler';
+import { Cell } from '../store/cell';
+import {
+  updateCell,
+  moveCell,
+  insertCellBefore,
+  deleteCell,
+} from '../store/slices/CellSlice';
+import { useAppDispatch } from '../store/store';
 import CodeEditor from './CodeEditor';
 import Preview from './Preview';
-
 import Resizable from './Resizable';
 
-const CodeCell = () => {
-  const [inputValue, setInputValue] = useState('');
+
+interface CodeCellProps {
+  cell: Cell;
+}
+
+const CodeCell = ({ cell }: CodeCellProps) => {
+  // const [inputValue, setInputValue] = useState('');
   const [code, setCode] = useState('');
+  const [err, setErr] = useState('');
+  const dispatch = useAppDispatch();
 
-
-  const onChange = (value:string) => {
-    setInputValue(value);
+  const onChange = (value: string) => {
+    dispatch(
+      updateCell({
+        id: cell.id,
+        content: value,
+      })
+    );
   };
 
-  const onClick = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    try {
-     const output = await codeProcessor(inputValue)
-      setCode(output);
-    } catch (err) {
-      alert(err);
-    }
-  };
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const output = await codeProcessor(cell.content);
+      setCode(output.code);
+      setErr(output.err);
+    }, 1000);
 
-  //  const onChange = (e:ChangeEvent<HTML)
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [cell.content]);
+
   return (
-    <Resizable direction='vertical'>
-      <div className='h-full flex flex-row'>
-        <Resizable direction='horizontal'>
-        <CodeEditor
-          initialValue="const a = 1;"
-          onChange={onChange}
-        />
+    <Resizable direction="vertical">
+      <div className="h-full flex flex-row">
+        <Resizable direction="horizontal">
+          <CodeEditor
+            onChange={onChange}
+            content={cell.content}
+          />
         </Resizable>
-          <Preview code={code} />
+        <Preview code={code} statusError={err} />
       </div>
     </Resizable>
   );
 };
 
-export default CodeCell
+export default CodeCell;

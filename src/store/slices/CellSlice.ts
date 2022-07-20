@@ -4,7 +4,7 @@ import {
   UpdateCellAction,
   DeleteCellAction,
   MoveCellAction,
-  InsertCellBeforeAction,
+  InsertCellAfterAction,
 } from '../actions';
 
 // 3. reducer type definition
@@ -46,7 +46,9 @@ const cellSlice = createSlice({
 
     deleteCell(state: CellState, action: PayloadAction<DeleteCellAction>) {
       delete state.data[action.payload.id];
-      state.order.filter((id) => id !== action.payload.id);
+      state.order = state.order.filter((id) => id !== action.payload.id);
+      
+    
     },
     moveCell(state: CellState, action: PayloadAction<MoveCellAction>) {
       const { direction } = action.payload;
@@ -59,9 +61,9 @@ const cellSlice = createSlice({
       state.order[index] = state.order[targetIndex];
       state.order[targetIndex] = action.payload.id;
     },
-    insertCellBefore(
+    insertCellAfter(
       state: CellState,
-      action: PayloadAction<InsertCellBeforeAction>
+      action: PayloadAction<InsertCellAfterAction>
     ) {
       const cell: Cell = {
         id: randomId(),
@@ -72,9 +74,9 @@ const cellSlice = createSlice({
 
       const index = state.order.findIndex((id) => id === action.payload.id);
       if (index < 0) {
-        state.order.push(cell.id);
+        state.order.unshift(cell.id);
       } else {
-        state.order.splice(index, 0, cell.id);
+        state.order.splice(index + 1, 0, cell.id);
       }
     },
   },
@@ -85,5 +87,5 @@ const randomId = () => {
 };
 
 export const cellReducer = cellSlice.reducer;
-export const { updateCell, deleteCell, moveCell, insertCellBefore } =
+export const { updateCell, deleteCell, moveCell, insertCellAfter } =
   cellSlice.actions;

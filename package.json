@@ -6,6 +6,7 @@
     "@babel/parser": "^7.18.8",
     "@babel/traverse": "^7.18.8",
     "@craco/craco": "^5.9.0",
+    "@fortawesome/fontawesome-free": "^6.1.1",
     "@monaco-editor/react": "^4.4.5",
     "@reduxjs/toolkit": "^1.8.3",
     "@testing-library/jest-dom": "^5.16.4",

@@ -1,23 +1,20 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Bundle } from 'typescript';
 import codeProcessor from '../../bundler';
-import { BundleCompleteAction } from '../actions';
+import { BundleCompleteAction, BundleStartAction } from '../actions';
 
 export {};
 
 interface BundleState {
-  id: string;
-  loading: boolean;
-  code: string;
-  err: string;
+    [key:string]: {
+      loading: boolean;
+      code: string;
+      err: string;
+    }
 }
 
-const initialState: BundleState = {
-  id: '',
-  loading: false,
-  code: '',
-  err: '',
-};
+
+const initialState: BundleState = {};
 
 export const asyncBundleThunk = createAsyncThunk<
   any,
@@ -27,9 +24,9 @@ export const asyncBundleThunk = createAsyncThunk<
   const { id } = action;
   const result = await codeProcessor(action.code);
   const data = {
-    id,
-    code: result.code,
-    err: result.err,
+      id,
+      code: result.code,
+      err: result.err,
   };
 
   return data;
@@ -40,29 +37,27 @@ const bundleSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(asyncBundleThunk.pending, (state, action) => {
-      state.loading = true;
-    });
-
-    builder.addCase(asyncBundleThunk.fulfilled, (state, action) => {
-      state.id = action.payload.id;
-      state.loading = false;
-      state.code = action.payload.code;
-      state.err = action.payload.err;
-    });
-
-    builder.addCase(asyncBundleThunk.rejected, (state, action) => {
-      if (action.error) {
-        state.id = '';
-        state.loading = false;
-        state.code = '';
-        state.err = action.error.message || 'error';
-      } else {
-        state.id = '';
-        state.loading = false;
-        state.code = '';
-        state.err = 'unkwon error occured';
+    builder.addCase(asyncBundleThunk.pending, (state, action):BundleState => {
+      state[action.meta.arg.id] = {
+        loading: true,
+        code: '',
+        err: ''
       }
+      return state
+    });
+
+    builder.addCase(asyncBundleThunk.fulfilled, (state, action):BundleState => {
+    state[action.meta.arg.id] = {
+      loading:false,
+      code: action.meta.arg.code,
+      err: action.meta.arg.err
+    }
+      return state
+  });
+
+    builder.addCase(asyncBundleThunk.rejected, (state, action):BundleState => {
+
+      return state
     });
   },
 });

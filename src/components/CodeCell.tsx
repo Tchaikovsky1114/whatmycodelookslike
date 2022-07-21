@@ -16,7 +16,8 @@ interface CodeCellProps {
 const CodeCell = ({ cell }: CodeCellProps) => {
  
   const dispatch = useAppDispatch();
-  const bundle = useAppSelector(state => state.bundle)
+  // 아이디마다 개별적으로 수정할 수 있게끔 fix 필요... 
+  const bundle = useAppSelector(state => state.bundle[cell.id])
   const onChange = (value: string) => {
     dispatch(
       updateCell({
@@ -40,7 +41,7 @@ const CodeCell = ({ cell }: CodeCellProps) => {
       clearTimeout(timer);
     };
   }, [cell.content,cell.id,dispatch]);
-
+  console.log(cell.id)
   console.log(cell.content)
   console.log(bundle)
   return (

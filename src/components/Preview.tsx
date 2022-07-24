@@ -14,35 +14,38 @@ const html = /*html*/ `
   <body>
     <div id="root"></div>
     <script>
+      const root = document.querySelector('#root');
       const handleError = (err) => {
-        const root = document.querySelector('#root');
+        
           root.innerHTML = '<div style="color: rgb(225,29,72)"><h4>RUNTIME ERROR</h4>' + err + '</div>'
           console.error(err);
       }
 
-      window.addEventListener('error', (e) => {
-        // 기본 기능인 console에 error를 출력하는 것을 막음(console에 발생시키는 error는 브라우저의 기본 기능으로 대체)
-        e.preventDefault()
-        handleError(e.error);
-      })
-
+  
       window.addEventListener('message',(event) => {
         try{
           eval(event.data)
         }catch(err){
-          handleError(err);
-          
+          handleError(err);  
         }
-        
       },false)
     </script>
   </body>
 </html>
 `;
 
+// <!-- window.addEventListener('error', (e) => {
+//   e.preventDefault()
+//   if(e){
+//     console.log(e)
+//     handleError(e.error);
+//   }else{
+//     console.log('unkown error occured')
+//   }
+// }) -->
 const Preview = ({code,statusError}:PreviewProps) => {
   const iframeRef = useRef<any>();
-
+  
   useEffect(() => {
     iframeRef.current.srcdoc = html;
     setTimeout(() => {

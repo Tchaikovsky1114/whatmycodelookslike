@@ -40,3 +40,7 @@
 .wmde-markdown p, .wmde-markdown blockquote, .wmde-markdown ul, .wmde-markdown ol, .wmde-markdown dl, .wmde-markdown table, .wmde-markdown pre, .wmde-markdown details {
   margin-bottom: 4px;
 }
+
+.react-draggable-transparent-selection .cell-list{
+  margin-bottom: 100vh;
+}

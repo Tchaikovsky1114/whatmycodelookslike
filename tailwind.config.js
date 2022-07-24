@@ -6,9 +6,20 @@ module.exports = {
     extend: {
       colors: {
         'modern-blue': '#0F172A'
+      },
+      keyframes: {
+        fadeIn: {
+          '0%,60%': {
+            opacity: 0
+          },
+          '100%': {
+            opacity: 100
+          }
+        }
       }
+
     },
-    
+
   },
   plugins: [],
 }

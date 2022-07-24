@@ -12,17 +12,24 @@ export const codeProcessor = async (rawCode: string) => {
     });
   }
   let result;
+
+  
+  
   try {
+
     result = await esbuild.build({
-      // 번들링 진입점
+
       entryPoints: ['index.js'],
+      // target:'es2015',
       bundle: true,
       write: false,
-      // plugins - onLoad - contents에 들어가야 할 inputValue
+
       plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
       define: {
         global: 'window',
       },
+      jsxFactory: '_React.createElement',
+      jsxFragment: '_React.Fragment'
     });
     initialized = true;
     return {

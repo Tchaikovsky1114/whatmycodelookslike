@@ -1,8 +1,8 @@
-import MonacoEditor, { Monaco } from '@monaco-editor/react';
-import * as monaco from 'C:/copypen/copypen/node_modules/monaco-editor/esm/vs/editor/editor.api';
+import Editor, { Monaco } from '@monaco-editor/react';
+import * as monaco from '../../node_modules/monaco-editor/esm/vs/editor/editor.api';
 
 import prettier from 'prettier';
-// prettier는 다양한 언어를 지원하기 때문에 js에게 맞추기 위해서는 적절한 parser를 가져와야 한다.
+
 import parser from 'prettier/parser-babel';
 import { useRef } from 'react';
 
@@ -16,11 +16,16 @@ interface CodeEditorProps {
 const CodeEditor = ({ onChange,content }: CodeEditorProps) => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
 
-  const onEditorDidMount = async (editor: monaco.editor.IStandaloneCodeEditor,_monaco: Monaco) => {
+
+  const onEditorBeforeMount = (monaco:Monaco) =>{
+    monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+  }
+
+  const onEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor,_monaco: Monaco) => {
     editorRef.current = editor;
     editor.onDidChangeModelContent(() => onChange(editor.getValue()));
     editor.getModel()?.updateOptions({ tabSize: 2 });
-  
+    
   };
 
   const onFormat = () => {
@@ -49,13 +54,15 @@ const CodeEditor = ({ onChange,content }: CodeEditorProps) => {
       >
         코드정리
       </button>
-      <MonacoEditor
+      <Editor
+      beforeMount={onEditorBeforeMount}
         onMount={onEditorDidMount}
         value={content}
         defaultLanguage="javascript"
         height="100%"
         theme="vs-dark"
-        options={{
+        
+        options={{    
           wordWrap: 'on',
           minimap: {
             enabled: false,
@@ -66,6 +73,7 @@ const CodeEditor = ({ onChange,content }: CodeEditorProps) => {
           scrollBeyondLastLine: false,
           automaticLayout: true,
         }}
+      
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Bundle } from 'typescript';
+
 import codeProcessor from '../../bundler';
-import { BundleCompleteAction, BundleStartAction } from '../actions';
+import { BundleCompleteAction } from '../actions';
 
 export {};
 
@@ -46,17 +46,32 @@ const bundleSlice = createSlice({
       return state
     });
 
-    builder.addCase(asyncBundleThunk.fulfilled, (state, action):BundleState => {
-    state[action.meta.arg.id] = {
+    builder.addCase(asyncBundleThunk.fulfilled, (state, action:PayloadAction<BundleCompleteAction>):BundleState => {
+      // meta, dispatch 이전 입력되는 data, payload thunk를 통해 변환된 data
+    state[action.payload.id] = {
       loading:false,
-      code: action.meta.arg.code,
-      err: action.meta.arg.err
+      code: action.payload.code,
+      err: action.payload.err
     }
       return state
   });
 
     builder.addCase(asyncBundleThunk.rejected, (state, action):BundleState => {
-
+      
+      if(action.error.message){
+        state[action.meta.arg.id] = {
+          loading:false,
+          code: '',
+          err: action.error.message
+        }
+      }else{
+        state[action.meta.arg.id] = {
+          loading:false,
+          code: '',
+          err: 'unkwown error occured'
+        }
+      }
+      
       return state
     });
   },

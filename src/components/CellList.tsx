@@ -1,4 +1,3 @@
-import React from 'react';
 import { Fragment } from 'react';
 import {useAppSelector } from '../store/store';
 import CellItem from './CellItem';
@@ -15,7 +14,7 @@ const CellList = () => {
   const renderedCells = order.map((id) => data[id])
   // console.log(order)
   return (
-    <>
+    <div className='cell-list my-0 mx-6 mb-96'>
     {renderedCells.map((cell) => 
     <Fragment key={'AddCell' + cell.id}>
     <CellItem cell={cell} />    
@@ -26,7 +25,7 @@ const CellList = () => {
     
     <AddCell isVisible={renderedCells.length === 0} isHidden={renderedCells.length > 0} prevCellId={null} />
     
-    </>
+    </div>
   )
 };
 

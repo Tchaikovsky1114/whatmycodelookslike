@@ -1,5 +1,5 @@
-import { ActionType } from '../action-types';
-import { CellTypes } from '../cell';
+
+import { CellTypes,Cell } from '../cell';
 
 // 1. type 지정 - 2. type에 맞는 property 지정.
 
@@ -24,13 +24,6 @@ export interface UpdateCellAction {
   content: string;
 }
 
-// actions
-// export type Action =
-//   | MoveCellAction
-//   | DeleteCellAction
-//   | InsertCellAfterAction
-//   | UpdateCellAction;
-
 export interface BundleStartAction {
   id: string;
 }
@@ -39,4 +32,16 @@ export interface BundleCompleteAction {
   id: string;
   code: string
   err: string
+}
+
+export interface FetchCellsLoadingAction {
+ loading: boolean
+}
+
+export interface FetchCellsCompleteAction {
+ data: Cell[]
+}
+
+export interface FetchCellsErrorAction {
+  errorMessage: string;
 }

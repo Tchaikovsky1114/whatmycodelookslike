@@ -3,7 +3,7 @@ import useUnifiedCode from '../hooks/useUnifiedCode';
 
 import { Cell } from '../store/cell';
 import { asyncBundleThunk } from '../store/slices/BundleSlice';
-import {updateCell} from '../store/slices/CellSlice';
+import {saveCells, updateCell} from '../store/slices/CellSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import CodeEditor from './CodeEditor';
 import LoadingSpinner from './LoadingSpinner';
@@ -25,8 +25,8 @@ const CodeCell = ({ cell }: CodeCellProps) => {
       updateCell({
         id: cell.id,
         content: value,
-      })
-    );
+      }));
+      dispatch(saveCells())
   };
   
   useEffect(() => {
@@ -36,6 +36,7 @@ const CodeCell = ({ cell }: CodeCellProps) => {
         code: unifiedCode,
         err:''
       }))
+      dispatch(saveCells())
     }
     const timer = setTimeout(async () => {
        dispatch(asyncBundleThunk({
@@ -43,6 +44,7 @@ const CodeCell = ({ cell }: CodeCellProps) => {
           code:  unifiedCode,
           err: ''
       }));
+      dispatch(saveCells())
     }, 1000);
 
     return () => {

@@ -1,5 +1,5 @@
 {
-  "name": "copypen",
+  "name": "local-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/jscodeshift": "^0.11.5",
+    "@types/lodash": "^4.14.182",
     "@types/node": "^16.11.43",
     "@types/prettier": "^2.6.3",
     "@types/react": "^18.0.15",
@@ -24,14 +25,17 @@
     "esbuild-wasm": "^0.14.49",
     "jscodeshift": "^0.11.0",
     "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
     "monaco-editor": "^0.33.0",
     "monaco-jsx-highlighter": "^2.0.4",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-persist": "^1.0.2",
     "react-redux": "^8.0.2",
     "react-resizable": "^3.0.4",
     "react-scripts": "^5.0.1",
+    "redux-persist": "^6.0.0",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
@@ -39,7 +43,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "node local-api.js"
   },
   "eslintConfig": {
     "extends": [

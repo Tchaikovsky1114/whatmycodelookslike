@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState, useRef } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import { Cell } from '../store/cell';
 import { useAppDispatch } from '../store/store';
-import { updateCell } from '../store/slices/CellSlice';
+import { saveCells, updateCell } from '../store/slices/CellSlice';
 
 
 interface TextEditorProps {
@@ -20,6 +20,7 @@ const TextEditor = ({cell}:TextEditorProps) => {
       content:e!.currentTarget.value
     }
     ))
+    dispatch(saveCells())
   }
 
   const handleToggleEditor = () => {
@@ -46,13 +47,13 @@ const TextEditor = ({cell}:TextEditorProps) => {
   if(editing) {
     return ( 
       <div ref={ref}>
-      <MDEditor value={cell.content || '# Start Edit!'} onChange={onChange} />
+      <MDEditor value={cell.content || 'EDIT'} onChange={onChange} />
       </div>
     )
   }else{
     return (
       <div onClick={handleToggleEditor}>
-      <MDEditor.Markdown source={cell.content || '# Start Edit!'} style={{ whiteSpace: 'pre-wrap' }} />  
+      <MDEditor.Markdown source={cell.content || 'EDIT'} style={{ whiteSpace: 'pre-wrap' }} />  
       </div>
     );
   }

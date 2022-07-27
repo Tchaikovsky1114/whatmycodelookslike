@@ -14,18 +14,18 @@ interface CodeEditorProps {
 
 
 const CodeEditor = ({ onChange,content }: CodeEditorProps) => {
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
-
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>();
 
   const onEditorBeforeMount = (monaco:Monaco) =>{
     monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+    
   }
 
   const onEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor,_monaco: Monaco) => {
-    editorRef.current = editor;
-    editor.onDidChangeModelContent(() => onChange(editor.getValue()));
-    editor.getModel()?.updateOptions({ tabSize: 2 });
     
+    editorRef.current = editor;
+    editor.getModel()?.updateOptions({ tabSize: 2 });
+    editor.onDidChangeModelContent(() => onChange(editor.getValue()));
   };
 
   const onFormat = () => {

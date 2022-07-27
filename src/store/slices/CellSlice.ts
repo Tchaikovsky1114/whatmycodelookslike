@@ -1,11 +1,16 @@
 import { Cell } from '../cell';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios'
 import {
   UpdateCellAction,
   DeleteCellAction,
   MoveCellAction,
   InsertCellAfterAction,
+
 } from '../actions';
+import { store } from '../store';
+import _ from 'lodash'
+
 
 // 3. reducer type definition
 
@@ -25,16 +30,29 @@ const initialState: CellState = {
   data: {},
 };
 
-// export const insertCellBefore = (id:string,type:CellTypes ):InsertCellBeforeAction =>{
 
-//   return {
-//     type: ActionType.INSERT_CELL_BEFORE,
-//     data: {
-//       id,
-//       type
-//     }
-//   }
-// }
+
+
+
+export const fetchCells = createAsyncThunk('cell/fetchCells',async () => {
+    const { data }: {data: Cell[]} = await axios.get('/cells');
+    return data
+}) 
+
+const handler = async () => {
+  const {cell: {data,order}} = store.getState();
+  const cells = order.map(id => data[id]);
+
+ await axios.post('/cells',{cells})
+ 
+}
+
+const debouncedHandler = _.debounce(handler,3000)
+
+
+export const saveCells = createAsyncThunk('cell/saveCells', debouncedHandler)
+
+
 const cellSlice = createSlice({
   name: 'cell',
   initialState,
@@ -47,8 +65,6 @@ const cellSlice = createSlice({
     deleteCell(state: CellState, action: PayloadAction<DeleteCellAction>) {
       delete state.data[action.payload.id];
       state.order = state.order.filter((id) => id !== action.payload.id);
-      
-    
     },
     moveCell(state: CellState, action: PayloadAction<MoveCellAction>) {
       const { direction } = action.payload;
@@ -80,6 +96,46 @@ const cellSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCells.fulfilled,(state ,action) => {
+      state.loading = false;
+      state.order = action.payload.map(cell => cell.id)
+      
+      state.data = action.payload.reduce((acc,cell) => {
+        acc[cell.id] = cell;
+        return acc
+      },{} as CellState['data'])
+    })
+    
+    builder.addCase(fetchCells.rejected, (state ,action) => {
+      const { message } = action.error
+      state.loading = false;
+      if ( message ){
+        state.error = message
+      } else {
+        state.error = '코드 전송 중 알 수 없는 에러가 발생했습니다.'
+      }
+    })
+
+    builder.addCase(fetchCells.pending, (state ,action) => {
+      state.loading = true
+    })
+
+    builder.addCase(saveCells.fulfilled, (state,action) => {
+      state.loading = false
+    })
+    builder.addCase(saveCells.pending, (state,action) => {
+      state.loading = true
+    })
+    builder.addCase(saveCells.rejected, (state,action) => {
+      const {message} = action.error
+      state.loading = false
+      if(message){
+        state.error = message
+      }
+      
+    })
+  }
 });
 
 const randomId = () => {

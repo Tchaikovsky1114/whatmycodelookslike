@@ -1,5 +1,5 @@
 import React from 'react';
-import { deleteCell,moveCell } from '../store/slices/CellSlice';
+import { deleteCell,moveCell, saveCells } from '../store/slices/CellSlice';
 import { useAppDispatch } from '../store/store';
 
 
@@ -13,12 +13,15 @@ const ActionBar = ({id,bgColor}:ActionBarProps) => {
 
   const cellUpHandler = () => {
     dispatch(moveCell({id,direction:'up'}))
+    dispatch(saveCells())
   }
   const cellDownHandler = () => {
     dispatch(moveCell({id,direction:'down'}))
+    dispatch(saveCells())
   }
   const cellDeleteHandler = () => {
     dispatch(deleteCell({id}))
+    dispatch(saveCells())
   }
 
   return (

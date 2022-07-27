@@ -1,6 +1,7 @@
-# mini project: what my code looks like
+## 2021.07.28 
 
-## goal
+### Refactored using redux/thunk (use createAsyncThunk) and redux-persist.
 
-help to comprehense babel,lint
+- I hope you can listen to Stephen's great lectures in the latest library.
+
 
